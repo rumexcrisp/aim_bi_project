@@ -1,0 +1,12 @@
+name: aim_bi_project
+channels:
+    - conda-forge
+dependencies:
+  - black
+  - flask
+  - flask-cors
+  - ipykernel
+  - matplotlib
+  - numpy
+  - pandas
+  #ToDo: - gunicorn
