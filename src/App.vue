@@ -1,26 +1,59 @@
-<script setup lang="ts">
-import DataTableComponent from './components/DataTableComponent.vue';
-</script>
-
 <template>
   <div>
-    <DataTableComponent />
+    <Line :data="lineChartData" :options="options" />
+  </div>
+  <div>
+    <Bar :data="barChartData" :options="options" />
+  </div>
+  <div>
+    <Doughnut :data="doughnutChartData" :options="options" />
   </div>
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
+<script lang="ts">
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  ArcElement
+} from 'chart.js'
+import { Line, Bar, Doughnut } from 'vue-chartjs'
+import * as chartConfig from './config/chartConfig.js'
+import * as doughnutchartConfig from './config/doughnutchartConfig.js'
 
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend
+)
 
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+export default {
+  name: 'App',
+  components: {
+    Line, Bar, Doughnut
+  },
+  data() {
+    return {
+      lineChartData: chartConfig.data,
+      barChartData: chartConfig.data,
+      doughnutChartData: doughnutchartConfig.data,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+      }
+    };
+  }
 }
-</style>
+</script>
