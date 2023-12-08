@@ -9,4 +9,5 @@ dependencies:
   - matplotlib
   - numpy
   - pandas
+  - requests
   #ToDo: - gunicorn
