@@ -6,6 +6,9 @@ import time
 import pytz
 import sqlite3
 import os
+import sys
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 def connect_db(db) -> sqlite3.Connection | None:
@@ -18,21 +21,18 @@ def connect_db(db) -> sqlite3.Connection | None:
         sqlite3.Connection | None: db handle
     """
     try:
-        if os.path.exists(db) and os.path.isfile(db):
-            return sqlite3.connect(db)
-        else:
-            raise FileNotFoundError
+        return sqlite3.connect(db)
     except Exception as e:
-        print(f"Error connection to db: {db}: {e}")
-        return 1
+        print(f"Error connection to db: {e}", file=sys.stderr)
+        return None
 
 
 def get_data(start, end) -> pd.DataFrame:
     """get data from awattar
 
     Args:
-        start (int): epoch in ms
-        end (int): epoch in ms
+        start (time.datetime): datetime object
+        end (time.datetime): datetime object
 
     Returns:
         pd.DataFrame: dataframe containing data
@@ -40,8 +40,8 @@ def get_data(start, end) -> pd.DataFrame:
     api_url = "https://api.awattar.de/v1/marketdata"
     df = pd.DataFrame()
 
-    start_timestamp = start
-    end_timestamp = end
+    start_timestamp = int(start * 1000)
+    end_timestamp = int(end * 1000)
 
     params = {
         'start': start_timestamp,
@@ -59,7 +59,7 @@ def get_data(start, end) -> pd.DataFrame:
     if response.status_code == 200:
         data = response.json()
 
-        with open(f'../data/api_response_{start}_{end}.json', 'w') as json_file:
+        with open(f'{script_dir}/../data/api_response_{start}_{end}.json', 'w') as json_file:
             json.dump(data, json_file, indent=4)
 
         return pd.DataFrame(data["data"])
