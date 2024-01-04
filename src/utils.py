@@ -27,12 +27,12 @@ def connect_db(db) -> sqlite3.Connection | None:
         return None
 
 
-def get_data(start, end) -> pd.DataFrame:
+def get_data(start=datetime(2010, 1, 1), end=datetime(2023, 1, 1)) -> pd.DataFrame:
     """get data from awattar
 
     Args:
-        start (time.datetime): datetime object
-        end (time.datetime): datetime object
+        start (datetime): datetime object
+        end (datetime): datetime object
 
     Returns:
         pd.DataFrame: dataframe containing data
@@ -40,8 +40,8 @@ def get_data(start, end) -> pd.DataFrame:
     api_url = "https://api.awattar.de/v1/marketdata"
     df = pd.DataFrame()
 
-    start_timestamp = int(start * 1000)
-    end_timestamp = int(end * 1000)
+    start_timestamp = int(start.timestamp() * 1000)
+    end_timestamp = int(end.timestamp() * 1000)
 
     params = {
         'start': start_timestamp,
@@ -99,7 +99,11 @@ def read_db(conn, start=datetime(1970, 1, 1, 1), end=datetime(1970, 1, 1, 1)) ->
     print(f"start: {start}, end: {end}")
     df_db = pd.DataFrame()
     start_time = time.time()
-    df_db = pd.read_sql('select * from awattar', conn)
+    try:
+        df_db = pd.read_sql('select * from awattar', conn)
+    except Exception as e:
+        print(f"Error reading db: {e}")
+        return pd.DataFrame()
     print(f"db read took {(time.time()) - start_time:.6f} seconds to execute.")
     if start == 0 and end == 0:
         return df_db
