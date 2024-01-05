@@ -1,71 +1,39 @@
 <template>
-  <h1>Business Intelligence Vue Project</h1>
-  <div>
-    <Line :data="chartData" :options="chartOptions" />
+  <h1>Business Intelligence Project</h1>
+  <div class="container">
+    <BarChart v-if="loaded" id="line" :options="chartOptions" :data="chartData">Chart couldn't be loaded.</BarChart>
   </div>
 </template>
 
 <script lang="ts">
 import axios from 'axios';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  ArcElement
-} from 'chart.js'
-import { Line, Bar, Doughnut } from 'vue-chartjs'
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend
-)
+import BarChart from './components/BarChart.vue';
+import LineChart from './components/LineChart.vue';
 
 export default {
   name: 'App',
   components: {
-    Line, Bar, Doughnut
+    BarChart, LineChart
   },
-  data() {
-    return {
-      chartData: {
-        labels: [],
-        datasets: [
-          {
-            label: 'Market Price',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            data: [],
-          },
-        ],
-      },
-      chartOptions: {
-        responsive: true,
-        maintainAspectRatio: false,
-      },
-    };
-  },
+
+  data: () => ({
+    loaded: false,
+    chartData: null,
+    chartOptions: null
+  }),
+
   mounted() {
+    this.loaded = false;
     this.fetchData();
   },
+
   methods: {
     async fetchData() {
       try {
         const response = await axios.get('http://127.0.0.1:5000/api/get_data');
         console.log(response);
         this.processData(response.data);
+        this.loaded = true;
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -74,7 +42,7 @@ export default {
       // Process the data if needed
       // You might want to format timestamps, convert types, etc.
       this.chartData = {
-        labels: data.map(entry => entry.start_timestamp),
+        labels: data.map(entry => entry.date),
         datasets: [
           {
             label: 'Market Price',
