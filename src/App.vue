@@ -63,7 +63,7 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const response = await axios.get('http://localhost:5000/api/get_data');
+        const response = await axios.get('http://127.0.0.1:5000/api/get_data');
         console.log(response);
         this.processData(response.data);
       } catch (error) {
