@@ -1,7 +1,10 @@
 <template>
   <h1>Business Intelligence Project</h1>
-  <div class="container">
+  <!-- <div class="container">
     <BarChart v-if="loaded" id="line" :options="chartOptions" :data="chartData">Chart couldn't be loaded.</BarChart>
+  </div> -->
+  <div class="container">
+    <LineChart v-if="loaded" id="line" :options="chartOptions" :data="chartData">Chart couldn't be loaded.</LineChart>
   </div>
 </template>
 
@@ -19,7 +22,10 @@ export default {
   data: () => ({
     loaded: false,
     chartData: null,
-    chartOptions: null
+    chartOptions: {
+      responsive: true,
+      maintainAspectRatio: false,
+    },
   }),
 
   mounted() {
@@ -31,7 +37,7 @@ export default {
     async fetchData() {
       try {
         const response = await axios.get('http://127.0.0.1:5000/api/get_data');
-        console.log(response);
+        // console.log(response);
         this.processData(response.data);
         this.loaded = true;
       } catch (error) {
@@ -53,9 +59,29 @@ export default {
         ],
       };
       this.chartOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-      };
+        scales: {
+          x: {
+            display: true,
+            title: {
+              display: true,
+              text: 'Date'
+            },
+            ticks: {
+              major: {
+                enabled: true
+              },
+              color: '#000000',
+            }
+          },
+          y: {
+            display: true,
+            title: {
+              display: true,
+              text: 'Cent/kWh'
+            }
+          }
+        }
+      }
     }
   }
 }
