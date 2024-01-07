@@ -3,8 +3,15 @@
     <nav class="container flex flex-col sm:flex-row items-center gap-4 text-black py-6">
       <RouterLink :to="{ name: 'home' }">
         <div class="flex items-center gap-3">
-          <i class="fa-solid fa-sun text-2xl"></i>
-          <p class="text-2xl">BI Project</p>
+          <i class="fa-solid fa-bolt text-2xl"></i>
+          <p class="text-2xl">BI Stromkosten Project</p>
+        </div>
+      </RouterLink>
+
+      <RouterLink :to="{ name: 'data' }">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-chart-simple text-2xl"></i>
+          <p class="text-2xl">Data</p>
         </div>
       </RouterLink>
 
