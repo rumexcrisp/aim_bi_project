@@ -1,26 +1,25 @@
-<script setup lang="ts">
-import DataTableComponent from './components/DataTableComponent.vue';
-</script>
-
 <template>
-  <div>
-    <DataTableComponent />
+  <div class="flex flex-col min-h-screen font-Roboto bg-gray-200">
+    <SiteNavigation />
+    <RouterView class="flex-1" v-slot="{ Component }">
+      <Transition name="page">
+        <component :is="Component" />
+      </Transition>
+    </RouterView>
   </div>
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<script setup>
+import { RouterView } from "vue-router";
+import SiteNavigation from "./components/SiteNavigation.vue";
+</script>
+
+<style>
+.page-enter-active {
+  transition: 600ms ease all;
 }
 
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+.page-enter-from {
+  opacity: 0;
 }
 </style>

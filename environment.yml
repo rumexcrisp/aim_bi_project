@@ -6,7 +6,10 @@ dependencies:
   - flask
   - flask-cors
   - ipykernel
+  - ipympl
   - matplotlib
   - numpy
   - pandas
+  - pytz
+  - requests
   #ToDo: - gunicorn
