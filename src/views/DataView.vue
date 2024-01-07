@@ -132,7 +132,7 @@ const fetchData = async () => {
 
     const responseData: ChartData[] = response.data;
 
-    console.log(responseData);
+    // console.log(responseData);
 
     // const mockData: ChartData[] = [
     //   { date: '2022-01-01', marketprice: 10.5 },
