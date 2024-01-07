@@ -1,8 +1,6 @@
 <template>
-  <header class="sticky top-0 bg-weather-primary shadow-lg">
-    <nav
-      class="container flex flex-col sm:flex-row items-center gap-4 text-black py-6"
-    >
+  <header class="sticky top-0 bg-white shadow-lg">
+    <nav class="container flex flex-col sm:flex-row items-center gap-4 text-black py-6">
       <RouterLink :to="{ name: 'home' }">
         <div class="flex items-center gap-3">
           <i class="fa-solid fa-sun text-2xl"></i>
@@ -11,49 +9,45 @@
       </RouterLink>
 
       <div class="flex gap-3 flex-1 justify-end">
-        <i
-          class="fa-solid fa-circle-info text-xl hover:text-weather-secondary duration-150 cursor-pointer"
-          @click="toggleModal"
-        ></i>
-        <i
-          class="fa-solid fa-plus text-xl hover:text-weather-secondary duration-150 cursor-pointer"
-          @click="addCity"
-          v-if="route.query"
-        ></i>
+        <i class="fa-solid fa-circle-info text-xl hover:text-yellow-300 duration-150 cursor-pointer"
+          @click="toggleModal"></i>
       </div>
 
-      <BaseModal
-        :modalActive="modalActive"
-        @close-modal="toggleModal"
-      >
+      <BaseModal :modalActive="modalActive" @close-modal="toggleModal">
         <div class="text-black">
-          <h1 class="text-2xl mb-1">About:</h1>
+          <h1 class="text-3xl mb-2">Composition of electricity prices</h1>
+          
+          <h2 class="text-2xl">Fix compositon of eletricity prices</h2>
           <p class="mb-4">
-            The Local Weather allows you to track the current and
-            future weather of cities of your choosing.
+          <p>The <strong>average fixed composition</strong> of electricity prices of 2023, according the "Strom-Report"
+            from BNetzA and BDEW, is separated into the following parts:</p>
+          <ul class="list-disc pl-6">
+            <li>Energy Consumption: 52.9 %</li>
+            <li>Taxes and Charges: 26.8 %</li>
+            <li>Grid Fees: 20.3 %</li>
+          </ul>
           </p>
-          <h2 class="text-2xl">How it works:</h2>
-          <ol class="list-decimal list-inside mb-4">
-            <li>
-              Search for your city by entering the name into the
-              search bar.
-            </li>
-            <li>
-              Select a city within the results, this will take
-              you to the current weather for your selection.
-            </li>
-            <li>
-              Track the city by clicking on the "+" icon in the
-              top right. This will save the city to view at a
-              later time on the home page.
-            </li>
-          </ol>
+          
+          <h2 class="text-2xl">Dynamic composition of electicity prices</h2>
+          <p class="mb-4">
+            Due to our investigations on the detailed composition of electricity prices, there is no exact definition what
+            the end consumer really pays.
+          </p>
 
-          <h2 class="text-2xl">Removing a city</h2>
-          <p>
-            If you no longer wish to track a city, simply select
-            the city within the home page. At the bottom of the
-            page, there will be am option to delete the city.
+          <h2 class="text-2xl">Baseline assumption</h2>
+          <p class="mb-4">
+          <p>For the calculation of the <i>real-world prices</i> for the <strong>dynamic composition</strong> of eletricity prices, the following assumptions are made:</p>
+          <ul class="list-disc pl-6">
+            <li>Energy Consumption: marketprice from awattar</li>
+            <li>Taxes and Charges: 12.57 Cent/kWh</li>
+            <li>Grid Fees: 9.52 Cent/kWh</li>
+          </ul>
+          <p>Therefore, grid charges and taxes build a <strong>baseline</strong> which must be payed.</p>
+          </p>
+
+          <h3 class="text-2xl">Fix baseline</h3>
+          <p class="mb-4">
+          <p>With the fix baseline approach, the minimum marketprice fot the customers is <strong>0 Cent/kWH</strong>. Therefore, the minimum consumer price is always the sum of "Taxes and Charges" and "Grid Fees".</p>
           </p>
         </div>
       </BaseModal>
