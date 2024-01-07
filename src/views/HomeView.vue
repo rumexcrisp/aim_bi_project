@@ -4,8 +4,8 @@
 
     <p class="mb-4"><strong>Dynamic electricity prices - average cost savings for end consumers from 2025</strong></p>
 
-    <p class="mb-4">As part of the law to restart the digitalization of the energy transition (GNDEW), it is clear: from 1
-      January 2025, all electricity suppliers must offer dynamic electricity tariffs.</p>
+    <p class="mb-4">As part of the law to restart the digitalization of the energy transition (GNDEW), it is clear: <br>
+      &nbsp;&nbsp;&nbsp;&rarr; from 1 January 2025, all electricity suppliers must offer dynamic electricity tariffs.</p>
 
     <p class="mb-4">This project looks at data from the electricity price exchange from 2023, as well as the average
       electricity price per kWh for households in Germany.</p>
@@ -32,15 +32,17 @@
     </ul>
 
     <h3 class="text-xl font-bold mb-2">Where does the data come from?</h3>
-    <p class="mb-4">- RestAPI call via awattar, hourly electricity prices from the electricity exchange in Paris</p>
+    <ul class="list-disc pl-6 mb-4">
+      <li>RestAPI call via awattar, hourly electricity prices from the electricity exchange in Paris</li>
+    </ul>
 
     <h3 class="text-xl font-bold mb-2">What assumptions are made?</h3>
     <ul class="list-disc pl-6 mb-4">
       <li>Dynamic electricity prices have a baseline, i.e. there is always a minimum amount to be paid & negative prices
         are not possible.</li>
       <li>As no detailed price compositions have been disclosed in response to inquiries to electricity suppliers, it is
-        assumed that taxes & levies (12.57 cents/kWh) and grid charges (9.52 cents/kWh) form the baseline.</li>
-      <li>If the producer price of electricity falls below 0 cents/kWh, 0 cents/kWh is still charged.</li>
+        assumed that taxes & levies (12.57 &#162;/kWh) and grid charges (9.52 &#162;/kWh) form the baseline.</li>
+      <li>If the producer price of electricity falls below 0 &#162;/kWh, 0 &#162;/kWh is still charged.</li>
     </ul>
   </div>
 </template>
