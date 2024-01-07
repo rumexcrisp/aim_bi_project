@@ -5,9 +5,10 @@
       <div class="flex flew-row justify-center p-4 mb-4">
         <div class="mx-2">
           <Datepicker
-            v-model="date"
+            v-model="datepick"
             :preview-format="dateFormat"
             range
+            auto-apply
             class="border rounded"
           />
         </div>
@@ -57,14 +58,14 @@ interface ChartData {
 
 const startDate = ref(new Date(2019, 0, 1));
 const endDate = ref(new Date(2019, 0, 31));
-// const date = ref([startDate.value, endDate.value]);
-const date = ref();
-date.value = [startDate, endDate];
-const dateFormat = (date: Date | null): string => {
-  if (date instanceof Date) {
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
+const datepick = ref([startDate.value, endDate.value]);
+// const datepick = ref();
+// datepick.value = [startDate, endDate];
+const dateFormat = (datepick: Date | null): string => {
+  if (datepick instanceof Date) {
+    const day = datepick.getDate();
+    const month = datepick.getMonth() + 1;
+    const year = datepick.getFullYear();
     return `${day}/${month}/${year}`;
   }
   return ''; // Return an empty string or another default value if date is not valid
@@ -118,8 +119,8 @@ onMounted(() => {
 
 const fetchData = async () => {
   try {
-    const startEpoch = startDate.value.getTime();
-    const endEpoch = endDate.value.getTime();
+    const startEpoch = datepick.value[0].getTime();
+    const endEpoch = datepick.value[1].getTime();
 
     console.log("start: " + startDate.value + ", end: " + endDate.value);
     console.log("startISO: " + startEpoch + ", endISO: " + endEpoch);
