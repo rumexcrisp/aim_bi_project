@@ -24,7 +24,7 @@ def connect_db(db) -> sqlite3.Connection | None:
     try:
         return sqlite3.connect(db)
     except Exception as e:
-        print(f"Error connection to db: {e}", file=sys.stderr)
+        print(f"[connect_db] Error connection to db: {e}", file=sys.stderr)
         return None
 
 
@@ -95,20 +95,22 @@ def read_db(conn, start=datetime(1970, 1, 1, 1), end=datetime(1970, 1, 1, 1)) ->
     Returns:
         pd.DataFrame | None: _description_
     """
+    print(f"[read_db] start: {start}, end: {end}")
     start = int(start.timestamp() * 1000)
     end = int(end.timestamp() * 1000)
-    print(f"start: {start}, end: {end}")
+    print(f"[read_db] start: {start}, end: {end}")
     df_db = pd.DataFrame()
     start_time = time.time()
     try:
         df_db = pd.read_sql('select * from awattar', conn)
     except Exception as e:
-        print(f"Error reading db: {e}")
+        print(f"[read_db] Error reading db: {e}")
         return pd.DataFrame()
-    print(f"db read took {(time.time()) - start_time:.6f} seconds to execute.")
+    print(f"[read_db] db read took {(time.time()) - start_time:.6f} seconds to execute.")
     if start == 0 and end == 0:
         return df_db
     elif start <= end:
+        print("[read_db] start <= end")
         df_db = df_db[(df_db['start_timestamp'] >= start) & (df_db['start_timestamp'] < end)]
         return (df_db)
 

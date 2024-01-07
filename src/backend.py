@@ -1,7 +1,6 @@
-from datetime import datetime
-from flask import Flask, jsonify
+from datetime import datetime, timezone
+from flask import Flask, jsonify, request
 from flask_cors import CORS
-from time import sleep
 
 from utils import read_db, get_data, convert_to_germany_time, connect_db, simulated_energy_usage
 from utils import script_dir
@@ -15,13 +14,29 @@ sqlite_db = f'{script_dir}/../data/db.sqlite'
 
 @app.route("/api/get_data", methods=["GET"])
 def provide_data(start=datetime(2019, 1, 1), end=datetime(2019, 2, 1)):
+    """Response to a http GET request with data if available
+
+    Args:
+        start (datetime, optional): Start date. Defaults to datetime(2019, 1, 1).
+        end (datetime, optional): End date. Defaults to datetime(2019, 2, 1).
+
+    Returns:
+        _type_: _description_
+    """
+    start_epoch = int(request.args.get('start'))
+    end_epoch = int(request.args.get('end'))
+    start = datetime.fromtimestamp(start_epoch / 1000.0, tz=timezone.utc)
+    end = datetime.fromtimestamp(end_epoch / 1000.0, tz=timezone.utc)
+
+    print(f"[provide_data] Request with:\n  start: {start_epoch}\n  end: {end_epoch}\n  converted to: {start} - {end}")
+
     conn = connect_db(sqlite_db)
     df = read_db(conn, start, end)
 
     if df.empty:
-        print("Fehler, dataframe leer...")
+        print("Error, dataframe empty...")
         return "", 500
-    return jsonify(df.to_dict(orient="records"))
+    return jsonify(df.to_dict(orient="records")), 200
 
 
 def setup(force_api=False) -> None:
