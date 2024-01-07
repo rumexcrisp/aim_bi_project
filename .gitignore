@@ -26,3 +26,5 @@ release
 *.sw?
 .venv/*
 data/api_response*.json
+
+__pycache__/
