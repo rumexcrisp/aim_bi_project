@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="flex flex-col min-h-screen font-Roboto bg-white"
-  >
+  <div class="flex flex-col min-h-screen font-Roboto bg-gray-200">
     <SiteNavigation />
     <RouterView class="flex-1" v-slot="{ Component }">
       <Transition name="page">

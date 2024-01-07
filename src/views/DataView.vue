@@ -1,22 +1,30 @@
 <template>
-  <div class="flex p-4">
-    <div class="flex-1 h-64 flex flex-col justify-center items-center">
-      <LineChart v-if="loaded" id="line" :chartOptions="lineChartOptions" :chartData="lineChartData">Chart couldn't be loaded.</LineChart>
+  <div class="flex items-center justify-center h-screen">
+    <div v-if="!error">
+      <div class="flex p-4">
+        <div class="flex-1 h-64 flex flex-col justify-center items-center">
+          <LineChart v-if="loaded" id="line" :chartOptions="lineChartOptions" :chartData="lineChartData">Chart couldn't be loaded.</LineChart>
+          <div v-else>Loading Line Chart...</div>
+        </div>
+      </div>
+      <div class="flex p-4">
+        <div class="flex-1 h-64 flex flex-col justify-center items-center">
+          <DoughnutChart v-if="loaded" id="doughnut1" :chartData="doughnutChartData">Chart couldn't be loaded.</DoughnutChart>
+          <div v-else>Loading Doughnut Chart 1...</div>
+        </div>
+        <div class="flex-1 h-64 flex flex-col justify-center items-center">
+          <DoughnutChart v-if="loaded" id="doughnut2" :chartData="doughnutChartData">Chart couldn't be loaded.</DoughnutChart>
+          <div v-else>Loading Doughnut Chart 2...</div>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="flex p-4">
-    <div class="flex-1 h-64 flex flex-col justify-center items-center">
-      <DoughnutChart v-if="loaded" id="doughnut1" :chartData="doughnutChartData">Chart couldn't be loaded.</DoughnutChart>
-    </div>
-    <div class="flex-1 h-64 flex flex-col justify-center items-center">
-      <DoughnutChart v-if="loaded" id="doughnut2" :chartData="doughnutChartData">Chart couldn't be loaded.</DoughnutChart>
-    </div>
+    <div v-else class="text-red-500">{{ error }}</div>
   </div>
 </template>
 
 <script lang="ts">
 import { ref } from "vue";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { useRouter } from "vue-router";
 import BarChart from '../components/BarChart.vue';
 import LineChart from '../components/LineChart.vue';
@@ -33,6 +41,7 @@ export default {
   data: () => ({
     loaded: false,
     lineChartData: null,
+    error: false,
     doughnutChartData: {
       labels: ['Taxes', 'Fees', 'Consumption'],
       datasets: [
@@ -79,12 +88,14 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/get_data');
-        // console.log(response);
+        const response: AxiosResponse = await axios.get('http://127.0.0.1:5000/api/get_data', {
+          timeout: 5000, // Set timeout to 5 seconds (adjust as needed)
+        });
         this.processData(response.data);
         this.loaded = true;
       } catch (error) {
         console.error('Error fetching data:', error);
+        this.error = "Error fetching data. Please check backend."
       }
     },
     processData(data) {

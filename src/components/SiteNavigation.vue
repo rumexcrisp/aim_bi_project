@@ -2,21 +2,21 @@
   <header class="sticky top-0 bg-white shadow-lg">
     <nav class="container flex flex-col sm:flex-row items-center gap-4 text-black py-6">
       <RouterLink :to="{ name: 'home' }">
-        <div class="flex items-center gap-3">
-          <i class="fa-solid fa-bolt text-2xl"></i>
+        <div class="flex items-center gap-3 transition-colors hover:text-yellow-400">
+          <i class="fa-solid fa-bolt text-yellow-400 text-2xl"></i>
           <p class="text-2xl">BI Stromkosten Project</p>
         </div>
       </RouterLink>
 
       <RouterLink :to="{ name: 'data' }">
-        <div class="flex items-center gap-3">
-          <i class="fa-solid fa-chart-simple text-2xl"></i>
+        <div class="flex items-center gap-3 transition-color hover:text-green-400">
+          <i class="fa-solid fa-chart-simple text-green-400 text-2xl"></i>
           <p class="text-2xl">Data</p>
         </div>
       </RouterLink>
 
       <div class="flex gap-3 flex-1 justify-end">
-        <i class="fa-solid fa-circle-info text-xl hover:text-yellow-300 duration-150 cursor-pointer"
+        <i class="fa-solid fa-circle-info text-xl hover:text-blue-400 duration-150 cursor-pointer"
           @click="toggleModal"></i>
       </div>
 
