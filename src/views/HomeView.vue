@@ -1,15 +1,14 @@
 <template>
-  <div>
-    <h1>Test</h1>
-    <!-- <LineChart v-if="loaded" id="line" :options="chartOptions" :data="chartData">Chart couldn't be loaded.</LineChart> -->
-  </div>
-  <div>
-    <h1>Test</h1>
-    <!-- <LineChart v-if="loaded" id="line" :options="chartOptions" :data="chartData">Chart couldn't be loaded.</LineChart> -->
-  </div>
-  <div>
-    <h1>Test</h1>
-    <!-- <LineChart v-if="loaded" id="line" :options="chartOptions" :data="chartData">Chart couldn't be loaded.</LineChart> -->
+  <div class="flex p-4">
+    <div class="flex-1 h-64 flex flex-col justify-center items-center">
+      <LineChart v-if="loaded" id="line" :chartOptions="lineChartOptions" :chartData="lineChartData">Chart couldn't be loaded.</LineChart>
+    </div>
+    <div class="flex-1 h-64 flex flex-col justify-center items-center">
+      <DoughnutChart v-if="loaded" id="line" :chartOptions="lineChartOptions" :chartData="doughnutChartData">Chart couldn't be loaded.</DoughnutChart>
+    </div>
+    <div class="flex-1 h-64 flex flex-col justify-center items-center">
+      <DoughnutChart v-if="loaded" id="line" :chartOptions="lineChartOptions" :chartData="doughnutChartData">Chart couldn't be loaded.</DoughnutChart>
+    </div>
   </div>
 </template>
 
@@ -19,22 +18,33 @@ import axios from "axios";
 import { useRouter } from "vue-router";
 import BarChart from '../components/BarChart.vue';
 import LineChart from '../components/LineChart.vue';
+import DoughnutChart from '../components/DoughnutChart.vue';
 
 const router = useRouter();
 
 export default {
   name: 'App',
   components: {
-    BarChart, LineChart
-  },
+    BarChart, LineChart, DoughnutChart
+},
 
   data: () => ({
     loaded: false,
-    chartData: null,
-    chartOptions: {
+    lineChartData: null,
+    doughnutChartData: {
+      labels: ['Taxes', 'Fees', 'Consumption'],
+      datasets: [
+        {
+          backgroundColor: ['#41B883', '#E46651', '#00D8FF'],
+          data: [26.8, 20.3, 52.9]
+        }
+      ]
+    },
+    lineChartOptions: {
       responsive: true,
       maintainAspectRatio: false,
     },
+
   }),
 
   mounted() {
@@ -56,7 +66,7 @@ export default {
     processData(data) {
       // Process the data if needed
       // You might want to format timestamps, convert types, etc.
-      this.chartData = {
+      this.lineChartData = {
         labels: data.map(entry => entry.date),
         datasets: [
           {
@@ -67,7 +77,7 @@ export default {
           },
         ],
       };
-      this.chartOptions = {
+      this.lineChartOptions = {
         scales: {
           x: {
             display: true,
