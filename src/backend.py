@@ -2,7 +2,7 @@ from datetime import datetime
 from flask import Flask, jsonify
 from flask_cors import CORS
 
-from utils import read_db, get_data, convert_to_germany_time, connect_db
+from utils import read_db, get_data, convert_to_germany_time, connect_db, simulated_energy_usage
 from utils import script_dir
 
 app = Flask(__name__)

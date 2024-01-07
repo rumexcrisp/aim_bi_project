@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 import json
 import pandas as pd
+import numpy as np
 import requests
 import time
 import pytz
@@ -110,3 +111,22 @@ def read_db(conn, start=datetime(1970, 1, 1, 1), end=datetime(1970, 1, 1, 1)) ->
     elif start <= end:
         df_db = df_db[(df_db['start_timestamp'] >= start) & (df_db['start_timestamp'] < end)]
         return (df_db)
+
+
+def simulated_energy_usage(total_daily_energy=11, num_hours=24) -> np.ndarray:
+    # Create an array representing the hours of the day
+    hours = np.arange(num_hours)
+
+    energy_usage = total_daily_energy * (
+        0.6 * np.exp(-0.5 * ((hours - 6) / 2.0) ** 2) +
+        0.5 * np.exp(-0.5 * ((hours - 12) / 2.0) ** 2) +
+        0.7 * np.exp(-0.5 * ((hours - 18) / 2.0) ** 2)
+    )
+
+    # Ensure the energy usage is non-negative
+    energy_usage = np.maximum(energy_usage, 0)
+
+    # Normalize the energy usage to the total daily energy
+    energy_usage = total_daily_energy * (energy_usage / np.sum(energy_usage))
+
+    return energy_usage

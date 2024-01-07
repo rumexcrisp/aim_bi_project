@@ -1,20 +1,29 @@
-# aim_bi_project
+# bi-project
 
-This is a small project developed during the Business Intelligence lecture. The goal of this project is to handle data and display it to the user via a responsive application.
+This template should help get you started developing with Vue 3 in Vite.
 
-## Requirements
+## Recommended IDE Setup
 
-- micromamba
-- Node.js
-- npm
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
 
-## Usage
+## Customize configuration
 
-- Clone this repo
-- Backend:
-  - `micromamba create -p ./.venv -f environment.yml`
-  - `micromamba activate -p ./.venv`
-- Frontend:
-  - `npm install`
+See [Vite Configuration Reference](https://vitejs.dev/config/).
 
-Activate the venv and run the flask server with `python backend.py`. Then start the frontend by calling `npm run dev`.
+## Project Setup
+
+```sh
+npm install
+```
+
+### Compile and Hot-Reload for Development
+
+```sh
+npm run dev
+```
+
+### Compile and Minify for Production
+
+```sh
+npm run build
+```
