@@ -68,7 +68,7 @@ def provide_data(start=datetime(2019, 1, 1), end=datetime(2019, 2, 1)):
 
 def setup(force_api=False) -> None:
     start = datetime(2010, 1, 1)
-    end = datetime(2023, 1, 1)
+    end = datetime(2024, 1, 1)
 
     conn = connect_db(sqlite_db)
     df_db = read_db(conn)

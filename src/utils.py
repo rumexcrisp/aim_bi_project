@@ -60,7 +60,7 @@ def get_data(start=datetime(2010, 1, 1), end=datetime(2023, 1, 1)) -> pd.DataFra
     if response.status_code == 200:
         data = response.json()
 
-        with open(f'{script_dir}/../data/api_response_{start}_{end}.json', 'w') as json_file:
+        with open(f'{g_script_dir}/../data/api_response_{start}_{end}.json', 'w') as json_file:
             json.dump(data, json_file, indent=4)
 
         return pd.DataFrame(data["data"])
