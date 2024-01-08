@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-center h-screen">
+  <div class="flex justify-center h-screen">
     <div v-if="!error">
       <!-- Datepickers -->
       <div class="flex flew-row justify-center p-4 mb-4">

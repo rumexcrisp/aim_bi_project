@@ -84,35 +84,58 @@ def convert_to_germany_time(epoch) -> str:
     return dt_germany.strftime('%d-%m-%Y %H:%M:%S %Z')
 
 
-def read_db(conn, start=datetime(1970, 1, 1, 1), end=datetime(1970, 1, 1, 1)) -> pd.DataFrame | None:
+def decimate_df(df, max_rows):
+    current_rows = len(df)
+
+    print(f"[decimate_df] in size: {current_rows}")
+
+    if current_rows <= max_rows:
+        return df
+    
+    decimation_factor = current_rows // max_rows
+    decimated_df = df.iloc[::decimation_factor]
+
+    print(f"[decimate_df] out size: {len(decimated_df)}")
+
+    return decimated_df
+
+
+def read_db(conn, start=datetime(1970, 1, 1, 1), end=datetime(1970, 1, 1, 1), decimate=0) -> pd.DataFrame | None:
     """read data from sqlite db, returns whole db if start and end are default
 
     Args:
         conn (sqlite3.connect): sqlite3 db
         start (time.datetime, optional): start time. Defaults to datetime(1970, 1, 1, 1).
         end (time.datetime, optional): end time. Defaults to datetime(1970, 1, 1, 1).
+        decimate (int, optional): decimate data when range is big. Defaults to 0.
 
     Returns:
         pd.DataFrame | None: _description_
     """
+
     print(f"[read_db] start: {start}, end: {end}")
     start = int(start.timestamp() * 1000)
     end = int(end.timestamp() * 1000)
     print(f"[read_db] start: {start}, end: {end}")
     df_db = pd.DataFrame()
     start_time = time.time()
+
     try:
         df_db = pd.read_sql('select * from awattar', conn)
     except Exception as e:
         print(f"[read_db] Error reading db: {e}")
         return pd.DataFrame()
+    
     print(f"[read_db] db read took {(time.time()) - start_time:.6f} seconds to execute.")
+
     if start == 0 and end == 0:
         return df_db
     elif start <= end:
         print("[read_db] start <= end")
         df_db = df_db[(df_db['start_timestamp'] >= start) & (df_db['start_timestamp'] < end)]
-        return (df_db)
+        if decimate > 0:
+            return decimate_df(df_db, decimate)
+        return df_db
 
 
 def simulated_energy_usage(total_daily_energy=11, num_hours=24) -> np.ndarray:

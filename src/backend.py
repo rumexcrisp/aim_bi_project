@@ -31,7 +31,7 @@ def provide_data(start=datetime(2019, 1, 1), end=datetime(2019, 2, 1)):
     print(f"[provide_data] Request with:\n  start: {start_epoch}\n  end: {end_epoch}\n  converted to: {start} - {end}")
 
     conn = connect_db(sqlite_db)
-    df = read_db(conn, start, end)
+    df = read_db(conn, start, end, 100)
 
     if df.empty:
         print("Error, dataframe empty...")
