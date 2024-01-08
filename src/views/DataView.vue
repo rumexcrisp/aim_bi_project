@@ -27,13 +27,13 @@
       <div class="flex p-4">
         <div class="flex-1 h-64 flex flex-col justify-center items-center">
           <template v-if="loaded">
-            <DoughnutChart id="doughnut1" :chartData="doughnutChartData"></DoughnutChart>
+            <DoughnutChart id="doughnut1" :chartData="doughnutChartData1"></DoughnutChart>
           </template>
           <div v-else>Loading Doughnut Chart 1...</div>
         </div>
         <div class="flex-1 h-64 flex flex-col justify-center items-center">
           <template v-if="loaded">
-            <DoughnutChart id="doughnut2" :chartData="doughnutChartData"></DoughnutChart>
+            <DoughnutChart id="doughnut2" :chartData="doughnutChartData2"></DoughnutChart>
           </template>
           <div v-else>Loading Doughnut Chart 2...</div>
         </div>
@@ -57,6 +57,10 @@ interface ChartData {
   avg_marketprice: number;
 }
 
+interface PieData {
+  dyn_consumer_price_sample: number;
+}
+
 const startDate = ref(new Date(2019, 0, 1));
 const endDate = ref(new Date(2019, 0, 31));
 const datepick = ref([startDate.value, endDate.value]);
@@ -74,10 +78,10 @@ const dateFormat = (datepick: Date | null): string => {
 
 const loaded = ref(false);
 const error = ref<string | boolean>(false);
-const lineChartData = ref<any>(null);
 const startTime = ref({ hours: 0, minutes: 0 });
 
-const doughnutChartData = {
+const lineChartData = ref<any>(null);
+const doughnutChartData1 = {
   labels: ['Taxes', 'Fees', 'Consumption'],
   datasets: [
     {
@@ -86,6 +90,7 @@ const doughnutChartData = {
     },
   ],
 };
+const doughnutChartData2 = ref<any>(null);
 
 const lineChartOptions = {
   responsive: true,
@@ -137,25 +142,22 @@ const fetchData = async () => {
     console.log("start: " + startDate.value + ", end: " + endDate.value);
     console.log("startISO: " + startEpoch + ", endISO: " + endEpoch);
 
-    const response: AxiosResponse = await axios.get('http://127.0.0.1:5000/api/get_data', {
+    const lineDateResponse: AxiosResponse = await axios.get('http://127.0.0.1:5000/api/get_line_data', {
       params: {start: startEpoch, end: endEpoch},
       timeout: 5000,
     });
+    const responseLineData: ChartData[] = lineDateResponse.data;
+    const pieDateResponse: AxiosResponse = await axios.get('http://127.0.0.1:5000/api/get_pie_data', {
+      params: {start: startEpoch, end: endEpoch},
+      timeout: 5000,
+    });
+    const responsePieData: PieData[] = pieDateResponse.data;
 
-    const responseData: ChartData[] = response.data;
+    console.log(responseLineData);
+    console.log(responsePieData);
 
-    console.log(responseData);
-
-    // const mockData: ChartData[] = [
-    //   { date: '2022-01-01', marketprice: 10.5 },
-    //   { date: '2022-01-02', marketprice: 11.2 },
-    //   { date: '2022-01-03', marketprice: 12.0 },
-    //   // ... more data
-    // ];
-
-    const dataToProcess = responseData;
-
-    processData(dataToProcess);
+    processLineData(responseLineData);
+    processPieData(responsePieData);
     loaded.value = true;
   } catch (error: any) {
     console.error('Error fetching data:', error);
@@ -163,13 +165,13 @@ const fetchData = async () => {
   }
 };
 
-const processData = (data: ChartData[]) => {
-  const mockData: ChartData[] = [
-    { date: '2022-01-01', marketprice: 10.5, avg_marketprice: 12.0 },
-    { date: '2022-01-02', marketprice: 11.2, avg_marketprice: 12.0 },
-    { date: '2022-01-03', marketprice: 12.0, avg_marketprice: 12.0 },
-    // ... more data
-  ];
+const processLineData = (data: ChartData[]) => {
+  // const mockData: ChartData[] = [
+  //   { date: '2022-01-01', marketprice: 10.5, avg_marketprice: 12.0 },
+  //   { date: '2022-01-02', marketprice: 11.2, avg_marketprice: 12.0 },
+  //   { date: '2022-01-03', marketprice: 12.0, avg_marketprice: 12.0 },
+  //   // ... more data
+  // ];
   lineChartData.value = {
     labels: data.map((entry) => entry.date),
     datasets: [
@@ -186,6 +188,18 @@ const processData = (data: ChartData[]) => {
         data: data.map((entry) => entry.avg_marketprice),
       },
     ],
+  };
+};
+
+const processPieData = (data: PieData[]) => {
+  doughnutChartData2.value = {
+    labels: ['Taxes', 'Fees', 'Consumption'],
+    datasets: [
+    {
+      backgroundColor: ['#41B883', '#E46651', '#00D8FF'],
+      data: [12.57, 9.52, data],
+    },
+  ],
   };
 };
 </script>

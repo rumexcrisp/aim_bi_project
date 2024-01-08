@@ -5,6 +5,8 @@ from flask_cors import CORS
 from utils import read_db, get_data, convert_to_germany_time, connect_db, df_manipulations, simulated_energy_usage
 from utils import g_script_dir
 
+import numpy as np
+
 app = Flask(__name__)
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -12,8 +14,8 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 sqlite_db = f'{g_script_dir}/../data/db.sqlite'
 
 
-@app.route("/api/get_data", methods=["GET"])
-def provide_data(start=datetime(2019, 1, 1), end=datetime(2019, 2, 1)):
+@app.route("/api/get_line_data", methods=["GET"])
+def provide_line_data(start=datetime(2019, 1, 1), end=datetime(2019, 2, 1)):
     """Response to a http GET request with data if available
 
     Args:
@@ -31,7 +33,7 @@ def provide_data(start=datetime(2019, 1, 1), end=datetime(2019, 2, 1)):
     print(f"[provide_data] Request with:\n  start: {start_epoch}\n  end: {end_epoch}\n  converted to: {start} - {end}")
 
     conn = connect_db(sqlite_db)
-    df = read_db(conn, start, end)
+    df = read_db(conn, start, end, 100)
 
     if df.empty:
         print("Error, dataframe empty...")
@@ -39,31 +41,26 @@ def provide_data(start=datetime(2019, 1, 1), end=datetime(2019, 2, 1)):
     return jsonify(df.to_dict(orient="records")), 200
 
 
-# @app.route("/api/get_data", methods=["GET"])
-# def provide_data(start=datetime(2019, 1, 1), end=datetime(2019, 2, 1)):
-#     """Response to a http GET request with data if available
+@app.route("/api/get_pie_data", methods=["GET"])
+def provide_pie_data(start=datetime(2019, 1, 1), end=datetime(2019, 2, 1)):
+    start_epoch = int(request.args.get('start'))
+    end_epoch = int(request.args.get('end'))
+    start = datetime.fromtimestamp(start_epoch / 1000.0, tz=timezone.utc)
+    end = datetime.fromtimestamp(end_epoch / 1000.0, tz=timezone.utc)
 
-#     Args:
-#         start (datetime, optional): Start date. Defaults to datetime(2019, 1, 1).
-#         end (datetime, optional): End date. Defaults to datetime(2019, 2, 1).
+    print(f"[provide_data] Request with:\n  start: {start_epoch}\n  end: {end_epoch}\n  converted to: {start} - {end}")
 
-#     Returns:
-#         _type_: _description_
-#     """
-#     start_epoch = int(request.args.get('start'))
-#     end_epoch = int(request.args.get('end'))
-#     start = datetime.fromtimestamp(start_epoch / 1000.0, tz=timezone.utc)
-#     end = datetime.fromtimestamp(end_epoch / 1000.0, tz=timezone.utc)
+    conn = connect_db(sqlite_db)
+    df = read_db(conn, start, end, 100)
 
-#     print(f"[provide_data] Request with:\n  start: {start_epoch}\n  end: {end_epoch}\n  converted to: {start} - {end}")
+    dynIndex = np.random.randint(0,len(df))
+    baseline = 12.57 + 9.52
+    dyn_consumer_price_sample = df['dyn_consumer_price'].iloc[dynIndex] - baseline
 
-#     conn = connect_db(sqlite_db)
-#     df = read_db(conn, start, end, 100)
-
-#     if df.empty:
-#         print("Error, dataframe empty...")
-#         return "", 500
-#     return jsonify(df.to_dict(orient="records")), 200
+    if df.empty:
+        print("Error, dataframe empty...")
+        return "", 500
+    return str(dyn_consumer_price_sample), 200
 
 
 def setup(force_api=False) -> None:
