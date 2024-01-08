@@ -158,5 +158,7 @@ def simulated_energy_usage(total_daily_energy=11, num_hours=24) -> np.ndarray:
 
 def df_manipulations(df):
     df["avg_marketprice"] = df["marketprice"].rolling(window=50, center=True).mean()
+    baseline=12.57+9.52 #fix taxes + fix fees
+    df['dyn_consumer_price'] = df.apply(lambda row: baseline if row['marketprice'] < 0 else (baseline+row['marketprice']), axis=1)
     # print(list(df.columns))
     return df
