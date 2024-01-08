@@ -54,6 +54,7 @@ import DoughnutChart from '../components/DoughnutChart.vue';
 interface ChartData {
   date: string;
   marketprice: number;
+  avg_marketprice: number;
 }
 
 const startDate = ref(new Date(2019, 0, 1));
@@ -111,6 +112,17 @@ const lineChartOptions = {
       },
     },
   },
+  tooltip: {
+    intersect: false,
+  },
+  plugins: {
+    decimation: {
+      enabled: true,
+      algorithm: 'min-max'
+      // algorithm: 'lttb',
+    }
+  },
+  indexAxis: 'x',
 };
 
 onMounted(() => {
@@ -132,7 +144,7 @@ const fetchData = async () => {
 
     const responseData: ChartData[] = response.data;
 
-    // console.log(responseData);
+    console.log(responseData);
 
     // const mockData: ChartData[] = [
     //   { date: '2022-01-01', marketprice: 10.5 },
@@ -152,6 +164,12 @@ const fetchData = async () => {
 };
 
 const processData = (data: ChartData[]) => {
+  const mockData: ChartData[] = [
+    { date: '2022-01-01', marketprice: 10.5, avg_marketprice: 12.0 },
+    { date: '2022-01-02', marketprice: 11.2, avg_marketprice: 12.0 },
+    { date: '2022-01-03', marketprice: 12.0, avg_marketprice: 12.0 },
+    // ... more data
+  ];
   lineChartData.value = {
     labels: data.map((entry) => entry.date),
     datasets: [
@@ -160,6 +178,12 @@ const processData = (data: ChartData[]) => {
         borderColor: 'rgba(75, 192, 192, 1)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         data: data.map((entry) => entry.marketprice),
+      },
+      {
+        label: 'Market Price Average',
+        borderColor: 'rgba(160, 0, 192, 1)',
+        backgroundColor: 'rgba(160, 0, 192, 0.2)',
+        data: data.map((entry) => entry.avg_marketprice),
       },
     ],
   };

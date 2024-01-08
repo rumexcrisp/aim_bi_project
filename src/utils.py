@@ -9,7 +9,7 @@ import sqlite3
 import os
 import sys
 
-script_dir = os.path.dirname(os.path.abspath(__file__))
+g_script_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 def connect_db(db) -> sqlite3.Connection | None:
@@ -118,15 +118,14 @@ def read_db(conn, start=datetime(1970, 1, 1, 1), end=datetime(1970, 1, 1, 1), de
     end = int(end.timestamp() * 1000)
     print(f"[read_db] start: {start}, end: {end}")
     df_db = pd.DataFrame()
-    start_time = time.time()
 
     try:
+        start_time = time.time()
         df_db = pd.read_sql('select * from awattar', conn)
+        print(f"[read_db] db read took {(time.time()) - start_time:.6f} seconds to execute.")
     except Exception as e:
         print(f"[read_db] Error reading db: {e}")
         return pd.DataFrame()
-    
-    print(f"[read_db] db read took {(time.time()) - start_time:.6f} seconds to execute.")
 
     if start == 0 and end == 0:
         return df_db
@@ -155,3 +154,9 @@ def simulated_energy_usage(total_daily_energy=11, num_hours=24) -> np.ndarray:
     energy_usage = total_daily_energy * (energy_usage / np.sum(energy_usage))
 
     return energy_usage
+
+
+def df_manipulations(df):
+    df["avg_marketprice"] = df["marketprice"].rolling(window=50, center=True).mean()
+    # print(list(df.columns))
+    return df
